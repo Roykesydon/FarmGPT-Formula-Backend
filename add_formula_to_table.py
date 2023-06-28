@@ -63,28 +63,3 @@ for formula_detail in formula_detail_list:
         continue
 
     formula_repository.add_formula(formula_detail)
-
-
-"""
-formula_handler = FormulaHandler()
-formula_handler.set_formula_detail_list_from_file("./formula.txt")
-
-
-json_handler = JsonHandler()
-response = json_handler.return_json_as_dict("./output_1.json")
-response_message = response["choices"][0]["message"]["content"]
-
-
-def test():
-    compute_program = "def delta_c(x1, x2, x3, x4):\n    return (x2 - x1) / (x3 - x4)"
-    # print(compute_program)
-    exec(compute_program, globals())
-    print(delta_c(2, 5, 3, 4))
-
-
-test()
-
-
-# output formula_handler.get_formula_detail_list() result to a file
-json_handler.save_json("formula_table.json", formula_handler.get_formula_detail_list())
-"""
