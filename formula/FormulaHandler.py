@@ -147,15 +147,16 @@ formula:
         return detail
 
     def _regularize_x_variable_name(self, str):
-        return str.replace("_", "")
+        return str.replace("_", "").replace("{", "").replace("}", "")
 
     def _equation_split(self, equation: str) -> dict:
         equation = [
-            equation.strip() for equation in equation.split("\n") if len(equation)
+            equation.strip() for equation in equation.split("\n") if len(equation.strip())
         ]
         equation = [
-            equation_detail.replace("$", "").split("=") for equation_detail in equation
+            equation_detail.replace("$", "").split("=", 1) for equation_detail in equation
         ]
+        print(equation)
         equation = {left.strip(): right.strip() for left, right in equation}
         return equation
 
