@@ -50,12 +50,12 @@ class FormulaHandler:
             lines = "".join(lines)
 
             formulas = lines.split("===")
-            formulas = [formula.strip() for formula in formulas if len(formula)]
+            formulas = [formula.strip() for formula in formulas if len(formula.strip())]
 
             # Transform formula to detail as dict
             for formula in formulas:
                 details = formula.split("---")
-                details = [detail.strip() for detail in details if len(detail)]
+                details = [detail.strip() for detail in details if len(detail.strip())]
 
                 formula_detail = {}
                 for detail in details:
