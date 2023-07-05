@@ -1,5 +1,6 @@
 import os
 from dataclasses import asdict, dataclass
+from copy import deepcopy
 
 from data_handler.JsonHandler import JsonHandler
 from repository.FormulaRepositoryInterface import FormulaRepositoryInterface
@@ -30,11 +31,11 @@ class DiskFormulaRepository(FormulaRepositoryInterface):
 
     # override
     def return_all_formula(self) -> list:
-        return self.formula_table
+        return deepcopy(self.formula_table)
 
     # override
-    def get_formula_detail(self, formula_id) -> dict:
-        return self.formula_table[formula_id]
+    def get_formula_detail(self, formula_id: int) -> dict:
+        return deepcopy(self.formula_table[formula_id])
 
     # override
     @_need_backup
