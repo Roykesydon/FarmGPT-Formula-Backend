@@ -17,25 +17,38 @@ URL 前墜是 /formula
             | formula   | string   | 公式本身 |
             | id   | int      | 每個公式的唯一 id |
             | illustrate   | string   | 公式的說明 |
-            | variable   | dict   | 變數的說明 |
-            | variable_name   | dict   | 變數對應原本的名稱 |
+            | variable   | dict (type A)   | 變數的相關資訊 |
+
+            - type A
+                - | 參數名稱 | 類型   | 描述       |
+                    |----------|--------|------------|
+                    | class_id   | int   | 變數對應到的類別 id |
+                    | description   | string      | 變數的說明 |
+                    | original_name   | string   | 變數原本的名字 |
 
         - 回傳範例：
             - ```json
                 [
                     {
-                        "formula": "$$\n\\begin{aligned}\n& \\delta=\\left(\\mathrm{x}_{\\mathrm{1}}-\\mathrm{x}_2\\right) / \\mathrm{x_3}\n\\end{aligned}\n$$",
-                        "id": 2,
-                        "illustrate": "δ :为年增加量(tC·ha^-1·a^-1);",
+                        "formula": "DSOC=$x_1$×$x_2$×$x_3$×0.1",
+                        "id": 1,
+                        "illustrate": "土壤容重和土层深度来源于文献，若文献中未说明，容重根据 土壤质地在《中国土种志》[11~16]查得，土层深度默认 为 20 cm。\nDSOC = 农田土壤有机碳密度，tC·ha^-1",
                         "variable": {
-                            "x1": "为土壤有机碳初始值(tC·ha^-1);",
-                            "x2": "为试验n年后土壤有机碳值(tC·ha^-1);",
-                            "x3": "为试验年数。"
-                        },
-                        "variable_name": {
-                            "x1": "\\mathrm{DSOC}_{\\mathrm{0}}",
-                            "x2": "\\mathrm{DSOC}_{\\mathrm{n}}",
-                            "x3": "n"
+                            "x1": {
+                                "class_id": -1,
+                                "description": "为土壤有机碳量(gC·kg^-1);",
+                                "original_name": "SOC"
+                            },
+                            "x2": {
+                                "class_id": -1,
+                                "description": "为耕层土壤容重(g·cm^-3);",
+                                "original_name": "γ"
+                            },
+                            "x3": {
+                                "class_id": -1,
+                                "description": "为土层深度(cm)。",
+                                "original_name": "TH"
+                            }
                         }
                     }
                 ]
@@ -53,24 +66,37 @@ URL 前墜是 /formula
             | formula   | string   | 公式本身 |
             | id   | int      | 每個公式的唯一 id |
             | illustrate   | string   | 公式的說明 |
-            | variable   | dict   | 變數的說明 |
-            | variable_name   | dict   | 變數對應原本的名稱 |
+            | variable   | dict (type A)   | 變數的相關資訊 |
+
+            - type A
+                - | 參數名稱 | 類型   | 描述       |
+                    |----------|--------|------------|
+                    | class_id   | int   | 變數對應到的類別 id |
+                    | description   | string      | 變數的說明 |
+                    | original_name   | string   | 變數原本的名字 |
 
         - 回傳範例：
             - ```json
                 {
-                    "formula": "$$\n\\begin{aligned}\n& \\delta=\\left(\\mathrm{x}_{\\mathrm{1}}-\\mathrm{x}_2\\right) / \\mathrm{x_3}\n\\end{aligned}\n$$",
-                    "id": 2,
-                    "illustrate": "δ :为年增加量(tC·ha^-1·a^-1);",
+                    "formula": "DSOC=$x_1$×$x_2$×$x_3$×0.1",
+                    "id": 1,
+                    "illustrate": "土壤容重和土层深度来源于文献，若文献中未说明，容重根据 土壤质地在《中国土种志》[11~16]查得，土层深度默认 为 20 cm。\nDSOC = 农田土壤有机碳密度，tC·ha^-1",
                     "variable": {
-                        "x1": "为土壤有机碳初始值(tC·ha^-1);",
-                        "x2": "为试验n年后土壤有机碳值(tC·ha^-1);",
-                        "x3": "为试验年数。"
-                    },
-                    "variable_name": {
-                        "x1": "\\mathrm{DSOC}_{\\mathrm{0}}",
-                        "x2": "\\mathrm{DSOC}_{\\mathrm{n}}",
-                        "x3": "n"
+                        "x1": {
+                        "class_id": -1,
+                        "description": "为土壤有机碳量(gC·kg^-1);",
+                        "original_name": "SOC"
+                        },
+                        "x2": {
+                        "class_id": -1,
+                        "description": "为耕层土壤容重(g·cm^-3);",
+                        "original_name": "γ"
+                        },
+                        "x3": {
+                        "class_id": -1,
+                        "description": "为土层深度(cm)。",
+                        "original_name": "TH"
+                        }
                     }
                 }
                 ```
@@ -82,7 +108,11 @@ URL 前墜是 /formula
         - 格式：JSON
         - | 參數名稱 | 類型    | 描述       |
             |----------|---------|------------|
-            | variables   | dict    | key 是參數的個別名字，value 是使用者填的數值 |
+            | variables   | dict (type A)  | 存放使用者填的變數數值 |
+            - tpye A 
+                | 參數名稱 | 類型    | 描述       |
+                |----------|---------|------------|
+                | x(number)  | float  | 存放不同變數名稱和對應的數值 |
         - 範例：
             - ```json
                 {
@@ -131,7 +161,7 @@ URL 前墜是 /input_variable
 
         - | 參數名稱 | 類型   | 描述       |
             |----------|--------|------------|
-            | class_id   | int   | 變數對應的唯一類別 id |
+            | class_id   | int   | 變數對應的唯一類別 id，-1 代表未分類|
             | description   | string | 變數的說明資訊 |
             | formula_id   | int   | 變數對應的唯一公式 id |
             | name   | string   | 變數的名稱 |
@@ -216,5 +246,54 @@ URL 前墜是 /input_variable
                             ]
                         }
                     ]
+                }
+                ```
+
+- URL：`/class`
+    - 說明：取得所有輸入變數的分類表資訊
+    - 方法：GET
+    - 參數：
+    - 回傳：
+        - 格式：JSON
+
+        - | 參數名稱 | 類型   | 描述       |
+            |----------|--------|------------|
+            | (class id)   | dict (type A)  | 包含對應的 class 資訊 |
+            
+            - type A
+                - | 參數名稱 | 類型   | 描述       |
+                    |----------|--------|------------|
+                    | name   | string  | 分類的名稱 |
+
+        - 範例：
+            - ```json
+                {
+                    "1": {
+                        "name": "Class A"
+                    },
+                    "2": {
+                        "name": "Class B"
+                    },
+                    "3": {
+                        "name": "Class C"
+                    }
+                }
+                ```
+
+- URL：`/class/<int:class id>`
+    - 說明：根據 class id 回傳對應的 class 詳細資訊
+    - 方法：GET
+    - 參數：
+    - 回傳：
+        - 格式：JSON
+
+            - | 參數名稱 | 類型   | 描述       |
+                |----------|--------|------------|
+                | name   | string  | 分類的名稱 |
+
+        - 範例：
+            - ```json
+                {
+                    "name": "Class A"
                 }
                 ```

@@ -5,7 +5,7 @@ from formula.FormulaHandler import FormulaHandler
 from model.ChatGPT import ChatGPT
 from repository.DiskFormulaRepository import DiskFormulaRepository
 
-formula_repository = DiskFormulaRepository("./data/formula_table.json")
+formula_repository = DiskFormulaRepository(formula_table_path="./data/formula_table.json", variable_class_table_path="./data/variable_class_table.json")
 
 json_handler = JsonHandler()
 

@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, request
 
 from repository.DiskFormulaRepository import DiskFormulaRepository
 
-formula_repository = DiskFormulaRepository("./data/formula_table.json")
+formula_repository = DiskFormulaRepository(formula_table_path="./data/formula_table.json", variable_class_table_path="./data/variable_class_table.json")
 
 
 input_variable_blueprints = Blueprint("input_variable", __name__)
@@ -18,7 +18,6 @@ class InputVariableData:
     formula_id: int
     class_id: int
 
-
 @input_variable_blueprints.route("/", methods=["GET"])
 def get_all_input_variable():
     # return all input variable in formula_table.json
@@ -26,45 +25,40 @@ def get_all_input_variable():
     variable_list = []
 
     for formula in all_formula:
-        variables_description = formula["variable"]
-        variables_origin_name = formula["variable_name"]
+        formula_id = formula["id"]
 
-        for variable, description in variables_description.items():
-            origin_name = variables_origin_name[variable]
-            formula_id = formula["id"]
+        for variable, detail in formula["variable"].items():
             variable_list.append(
                 InputVariableData(
                     name=variable,
-                    origin_name=origin_name,
-                    description=description,
+                    origin_name=detail["original_name"],
+                    description=detail["description"],
                     formula_id=formula_id,
-                    class_id=-1,
+                    class_id=detail["class_id"],
                 )
             )
 
     return jsonify(variable_list)
 
+@input_variable_blueprints.route("/class", methods=["GET"])
+def get_all_input_variable_class():
+    # return all input variable class in variable_class_table.json
+    all_variable_class = formula_repository.return_all_variable_class()
+
+    return jsonify(all_variable_class)
+
+@input_variable_blueprints.route("/class/<int:class_id>", methods=["GET"])
+def get_input_variable_class_detail(class_id):
+    # return input variable class detail by class_id
+    class_id = str(class_id)
+    all_variable_class = formula_repository.return_all_variable_class()
+
+    return jsonify(all_variable_class[class_id])
+
 
 @input_variable_blueprints.route("/match_formula", methods=["POST"])
 def match_formula():
     # return fully matched or partially matched formula
-
-    """
-    output
-    {
-        "fully_matched": [
-            {
-                "formula_id": 1,
-                "calculate_result": 7
-            }
-        ],
-        "partially_matched": [
-            {
-                "formula_id": 2
-            }
-        ]
-    }
-    """
 
     return_json = {"fully_matched": [], "partially_matched": []}
 

@@ -27,7 +27,7 @@ model = ChatGPT(
 ChatGPT.set_api_key(config["openai_api_key"])
 
 formula_handler = FormulaHandler(model)
-formula_repository = DiskFormulaRepository("./data/formula_table.json")
+formula_repository = DiskFormulaRepository(formula_table_path="./data/formula_table.json", variable_class_table_path="./data/variable_class_table.json")
 
 
 formula_blueprints = Blueprint("formula", __name__)

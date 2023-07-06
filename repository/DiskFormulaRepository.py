@@ -20,12 +20,18 @@ class DiskFormulaRepository(FormulaRepositoryInterface):
 
         return wrapper
 
-    def __init__(self, formula_table_path: str) -> None:
+    def __init__(self, formula_table_path: str, variable_class_table_path: str) -> None:
         self._formula_table_path = formula_table_path
+        self._variable_class_table_path = variable_class_table_path
+
         self.json_handler = JsonHandler()
         self.formula_table = self.json_handler.return_json_as_dict(
             self._formula_table_path
         )
+        self.variable_class_table = self.json_handler.return_json_as_dict(
+            self._variable_class_table_path
+        )
+
         for formula in self.formula_table:
             formula["calc_formula"] = formula["calc_formula"].replace("\\n", "\n")
 
@@ -35,7 +41,9 @@ class DiskFormulaRepository(FormulaRepositoryInterface):
 
     # override
     def get_formula_detail(self, formula_id: int) -> dict:
-        return deepcopy(self.formula_table[formula_id])
+        for formula in self.formula_table:
+            if formula["id"] == formula_id:
+                return deepcopy(formula)
 
     # override
     @_need_backup
@@ -61,7 +69,7 @@ class DiskFormulaRepository(FormulaRepositoryInterface):
         add_formula["id"] = max_id + 1
         self.formula_table.append(add_formula)
 
-        self.json_handler.save_json(self._formula_table_path, self.formula_table)
+        self.json_handler.save_dict_as_json(self._formula_table_path, self.formula_table)
 
     # override
     @_need_backup
@@ -71,10 +79,14 @@ class DiskFormulaRepository(FormulaRepositoryInterface):
                 self.formula_table.remove(formula)
                 break
 
-        self.json_handler.save_json(self._formula_table_path, self.formula_table)
+        self.json_handler.save_dict_as_json(self._formula_table_path, self.formula_table)
+
+    # override
+    def return_all_variable_class(self) -> None:
+        return deepcopy(self.variable_class_table)
 
     def _create_backup(self) -> None:
-        self.json_handler.save_json(
+        self.json_handler.save_dict_as_json(
             self._formula_table_path + ".bak", self.formula_table
         )
 
@@ -85,4 +97,4 @@ class DiskFormulaRepository(FormulaRepositoryInterface):
         self.formula_table = self.json_handler.return_json_as_dict(
             self._formula_table_path + ".bak"
         )
-        self.json_handler.save_json(self._formula_table_path, self.formula_table)
+        self.json_handler.save_dict_as_json(self._formula_table_path, self.formula_table)

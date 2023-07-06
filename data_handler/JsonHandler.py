@@ -17,7 +17,7 @@ class JsonHandler:
             json_file = json_file.read()
             return json.loads(json_file)
 
-    def save_json(self, json_path: str, data: dict) -> None:
+    def save_dict_as_json(self, json_path: str, data: dict) -> None:
         with open(json_path, "w", encoding="utf-8") as json_file:
             json.dump(
                 data,

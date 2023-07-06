@@ -21,3 +21,8 @@ class FormulaRepositoryInterface(abc.ABC):
     def delete_formula(self, formula_id):
         "Delete formula from formula table"
         return NotImplemented
+    
+    @abc.abstractmethod
+    def return_all_variable_class(self):
+        "Return all variable class"
+        return NotImplemented

@@ -1,14 +1,16 @@
 import re
 from dataclasses import dataclass
+from copy import deepcopy
 
 
 class FormulaHandler:
+    VARIABLE_CLASS_ID_NULL = -1
+
     @dataclass
     class Detail:
         illustrate: str
         formula: str
         variable: dict
-        variable_name: dict
         chore: str
         chatgpt_program_response: str
         calc_formula: str
@@ -39,7 +41,8 @@ class FormulaHandler:
                 method_end = i
                 break
 
-        python_program = "\n".join(python_program[method_start : method_end + 1])
+        python_program = "\n".join(
+            python_program[method_start: method_end + 1])
         return python_program
 
     def set_formula_detail_list_from_file(self, formula_file_path: str):
@@ -50,12 +53,14 @@ class FormulaHandler:
             lines = "".join(lines)
 
             formulas = lines.split("===")
-            formulas = [formula.strip() for formula in formulas if len(formula.strip())]
+            formulas = [formula.strip()
+                        for formula in formulas if len(formula.strip())]
 
             # Transform formula to detail as dict
             for formula in formulas:
                 details = formula.split("---")
-                details = [detail.strip() for detail in details if len(detail.strip())]
+                details = [detail.strip()
+                            for detail in details if len(detail.strip())]
 
                 formula_detail = {}
                 for detail in details:
@@ -67,22 +72,33 @@ class FormulaHandler:
                 self._formula_detail_list.append(formula_detail)
 
     def _detail_value_transform(self, detail: dict):
+        # process the text in different part of detail
+
         # get detail data
         illustrate = detail["illustrate"]
         formula = detail["formula"]
         chore = detail["chore"]
 
-        variable = self._equation_split(detail["variable"])
-        variable = {
-            self._regularize_x_variable_name(key): value
-            for key, value in variable.items()
-        }
-
+        # process variable info
         variable_name = self._equation_split(detail["variable_name"])
         variable_name = {
             self._regularize_x_variable_name(key): value
             for key, value in variable_name.items()
         }
+
+        variable = self._equation_split(detail["variable"])
+
+        final_variable = {}
+
+        for key, value in variable.items():
+            key = self._regularize_x_variable_name(key)
+            final_variable[key] = {
+                "description": value,
+                "original_name": variable_name[key],
+                "class_id": FormulaHandler.VARIABLE_CLASS_ID_NULL
+            }
+
+        variable = final_variable
 
         # get ChatGPT program reponse for formula
         if "chatgpt_program_response" in detail:
@@ -112,9 +128,11 @@ formula:
             calc_formula = self._get_compute_program_from_response(
                 chatgpt_program_response
             )
-            calc_formula = self._get_method_part_from_python_program(calc_formula)
+            calc_formula = self._get_method_part_from_python_program(
+                calc_formula)
             calc_formula_before_method_name = "def "
-            calc_formula_after_method_name = "(" + calc_formula.split("(", 1)[1]
+            calc_formula_after_method_name = "(" + \
+                calc_formula.split("(", 1)[1]
 
             METHOD_NAME = "calc_formula"
             # regularize method parameter names
@@ -138,7 +156,6 @@ formula:
             illustrate=illustrate,
             formula=formula,
             variable=variable,
-            variable_name=variable_name,
             chore=chore,
             chatgpt_program_response=chatgpt_program_response,
             calc_formula=calc_formula,
@@ -159,7 +176,6 @@ formula:
             equation_detail.replace("$", "").split("=", 1)
             for equation_detail in equation
         ]
-        print(equation)
         equation = {left.strip(): right.strip() for left, right in equation}
         return equation
 
