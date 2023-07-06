@@ -14,6 +14,9 @@
 2. Copy ```./data/formula_table.example.json``` and rename it to ```./data/formula_table.json```
     - If you have your own formula table, skip this step
 
+2. Copy ```./data/variable_class_table.example.json``` and rename it to ```./data/variable_class_table.json```
+    - If you have your own variable class table, skip this step
+
 3. Install dependencies
     ```bash
     pip install -r requirements.txt
