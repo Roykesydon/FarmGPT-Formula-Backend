@@ -3,9 +3,10 @@
 ## Environment
 - Python 3.9.16
 
+## API Document
+- https://github.com/Roykesydon/FarmGPT-Formula-Backend/tree/main/API%20Document
+
 ## Setup
-
-
 
 1. Write ```./config.json```
     - copy ```./config.json.example``` and rename it to ```./config.json```
@@ -22,10 +23,23 @@
     pip install -r requirements.txt
     ```
 
-## Run (Development)
+## Run
+
+### Development
+- port
+    - 80
 
 ```bash
 python app.py
+```
+
+### Production
+
+- port
+    - 4667
+
+```bash
+docker-compose up
 ```
 
 ## Add new formula

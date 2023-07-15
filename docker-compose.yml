@@ -1,0 +1,8 @@
+version: '3.7'
+
+services:
+  backend:
+    build: .
+    restart: always
+    ports:
+      - 4667:4666
